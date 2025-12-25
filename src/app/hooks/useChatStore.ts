@@ -116,7 +116,7 @@ const useChatStore = create<State & Actions>()(
       setDownloadProgress: (progress) => set({ downloadProgress: progress }),
     }),
     {
-      name: "nextjs-ollama-ui-state",
+      name: "local-llm-interface-state",
       partialize: (state) => ({
         chats: state.chats,
         currentChatId: state.currentChatId,

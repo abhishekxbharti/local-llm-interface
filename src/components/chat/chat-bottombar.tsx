@@ -46,18 +46,21 @@ export default function ChatBottombar({
   const setBase64Images = useChatStore((state) => state.setBase64Images);
   const selectedModel = useChatStore((state) => state.selectedModel);
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
-      e.preventDefault();
-      handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
-    }
-  };
-
   const { isListening, transcript, startListening, stopListening } =
     useSpeechToText({ continuous: true });
 
-  const listen = () => {
-    isListening ? stopVoiceInput() : startListening();
+  // Centralized send validation logic
+  const canSend =
+    !isLoading && input.trim().length > 0 && !isListening && !!selectedModel;
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+      e.preventDefault();
+      // Only submit if we can send
+      if (canSend) {
+        handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+      }
+    }
   };
 
   const stopVoiceInput = () => {
@@ -66,15 +69,14 @@ export default function ChatBottombar({
   };
 
   const handleListenClick = () => {
-    listen();
+    isListening ? stopVoiceInput() : startListening();
   };
 
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
-      console.log("Input focused");
     }
-  }, [inputRef]);
+  }, []);
 
   return (
     <div className="px-4 pb-7 flex justify-between w-full items-center relative">
@@ -90,77 +92,49 @@ export default function ChatBottombar({
             onChange={handleInputChange}
             name="message"
             placeholder={!isListening ? "Enter your prompt here" : "Listening"}
-            className="max-h-40 px-6 pt-6 border-0 shadow-none bg-accent rounded-lg text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed dark:bg-card"
+            className="max-h-40 px-6 pt-6 border-0 shadow-none bg-accent rounded-lg text-md placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed dark:bg-card"
           />
 
-          <div className="flex w-full items-center p-2">
-            {isLoading ? (
-              // Loading state
-              <div className="flex w-full justify-end">
-                <div>
-                  <Button
-                    className="shrink-0 rounded-full"
-                    variant="ghost"
-                    size="icon"
-                    type="button"
-                    disabled
-                  >
-                    <Mic className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    className="shrink-0 rounded-full"
-                    variant="ghost"
-                    size="icon"
-                    type="submit"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      stop();
-                    }}
-                  >
-                    <StopIcon className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              // Default state
-              <div className="flex w-full justify-end">
-                <div>
-                  {/* Microphone button with animation when listening */}
-                  <Button
-                    className={`shrink-0 rounded-full ${
-                      isListening
-                        ? "relative bg-blue-500/30 hover:bg-blue-400/30"
-                        : ""
-                    }`}
-                    variant="ghost"
-                    size="icon"
-                    type="button"
-                    onClick={handleListenClick}
-                    disabled={isLoading}
-                  >
-                    <Mic className="h-4 w-4" />
-                    {isListening && (
-                      <span className="animate-pulse absolute h-[120%] w-[120%] rounded-full bg-blue-500/30" />
-                    )}
-                  </Button>
+          <div className="flex w-full items-center justify-end p-2">
+            {/* Microphone button */}
+            <Button
+              className={cn(
+                "shrink-0 rounded-full",
+                isListening && "relative bg-blue-500/30 hover:bg-blue-400/30"
+              )}
+              variant="ghost"
+              size="icon"
+              type="button"
+              onClick={handleListenClick}
+              disabled={isLoading}
+            >
+              <Mic className="h-4 w-4" />
+              {isListening && (
+                <span className="animate-pulse absolute h-[120%] w-[120%] rounded-full bg-blue-500/30" />
+              )}
+            </Button>
 
-                  {/* Send button */}
-                  <Button
-                    className="shrink-0 rounded-full"
-                    variant="ghost"
-                    size="icon"
-                    type="submit"
-                    disabled={
-                      isLoading ||
-                      !input.trim() ||
-                      isListening ||
-                      !selectedModel
-                    }
-                  >
-                    <SendHorizonal className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+            {/* Send/Stop button */}
+            {isLoading ? (
+              <Button
+                className="shrink-0 rounded-full"
+                variant="ghost"
+                size="icon"
+                type="button"
+                onClick={stop}
+              >
+                <StopIcon className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button
+                className="shrink-0 rounded-full"
+                variant="ghost"
+                size="icon"
+                type="submit"
+                disabled={!canSend}
+              >
+                <SendHorizonal className="h-4 w-4" />
+              </Button>
             )}
           </div>
           {base64Images && (

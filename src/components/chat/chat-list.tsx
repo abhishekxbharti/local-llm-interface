@@ -2,10 +2,7 @@ import { Message } from "ai/react";
 import React from "react";
 import ChatMessage from "./chat-message";
 import { ChatMessageList } from "../ui/chat/chat-message-list";
-import {
-  ChatBubble,
-  ChatBubbleMessage,
-} from "../ui/chat/chat-bubble";
+import { ChatBubble, ChatBubbleMessage } from "../ui/chat/chat-bubble";
 import { ChatRequestOptions } from "ai";
 
 interface ChatListProps {
@@ -28,7 +25,7 @@ export default function ChatList({
       <ChatMessageList>
         {messages.map((message, index) => (
           <ChatMessage
-            key={message.id || index}
+            key={`${message.id}-${index}`}
             message={message}
             isLast={index === messages.length - 1}
             isLoading={isLoading}

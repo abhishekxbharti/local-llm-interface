@@ -45,7 +45,8 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
       const savedMessages = getMessagesById(id);
       saveMessages(id, [...savedMessages, message]);
       setLoadingSubmit(false);
-      router.replace(`/c/${id}`);
+      // URL is already updated via window.history.replaceState() in onSubmit
+      // router.replace() was causing component remount, visual bump, and sidebar reset
     },
     onError: (error: Error) => {
       setLoadingSubmit(false);
