@@ -131,15 +131,14 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
   ];
 
   return (
-    <div className="flex flex-col w-full max-w-3xl h-full">
+    <div className="flex flex-col w-full h-full">
       <ChatTopbar
         isLoading={isLoading}
         chatId={id}
         messages={messages}
         setMessages={setMessages}
       />
-
-      <div className="flex-1 min-h-0 overflow-hidden">
+      <div className="flex-1 mx-auto max-w-3xl w-full min-h-0 overflow-hidden">
         <AnimatePresence mode="wait">
           {messages.length === 0 ? (
             <motion.div

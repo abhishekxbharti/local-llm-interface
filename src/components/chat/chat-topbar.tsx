@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/sheet";
 
 import { Button } from "../ui/button";
-import { CaretSortIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { PanelLeftOpen } from "lucide-react";
 import { Sidebar } from "../sidebar";
 import { Message } from "ai/react";
 import { getSelectedModel } from "@/lib/model-helper";
@@ -67,10 +68,12 @@ export default function ChatTopbar({
   };
 
   return (
-    <div className="w-full flex px-4 py-6 items-center justify-between lg:justify-center ">
+    <div className="w-full flex px-4 py-6 items-center justify-between lg:justify-start">
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetTrigger>
-          <HamburgerMenuIcon className="lg:hidden w-5 h-5" />
+        <SheetTrigger asChild>
+          <Button variant="ghost" size="icon" className="lg:hidden h-9 w-9">
+            <PanelLeftOpen className="h-4 w-4" />
+          </Button>
         </SheetTrigger>
         <SheetContent side="left">
           <SheetHeader className="sr-only">
@@ -79,7 +82,7 @@ export default function ChatTopbar({
           <Sidebar
             chatId={chatId || ""}
             isCollapsed={false}
-            isMobile={false}
+            isMobile={true}
             messages={messages}
             closeSidebar={handleCloseSidebar}
           />
@@ -93,13 +96,13 @@ export default function ChatTopbar({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[300px] justify-between"
+            className="w-[200px] justify-between"
           >
             {selectedModel || "Select model"}
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-1">
+        <PopoverContent className="w-[200px] p-1">
           {models.length > 0 ? (
             models.map((model) => (
               <Button

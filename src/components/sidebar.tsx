@@ -61,11 +61,15 @@ export function Sidebar({
   return (
     <div
       data-collapsed={isCollapsed}
-      className="relative justify-between group bg-card flex flex-col h-full gap-2 p-2 data-[collapsed=true]:p-1 border-r border-border"
+      className={cn(
+        "relative justify-between group bg-card flex flex-col h-full gap-2 p-2 data-[collapsed=true]:p-1",
+        !isMobile && "border-r border-border"
+      )}
     >
+      {/* Fixed top section */}
       <div
         className={cn(
-          "flex flex-col p-1 max-h-fit overflow-y-auto",
+          "flex flex-col p-1",
           isCollapsed ? "items-center" : "items-stretch",
           isMobile && "pt-10"
         )}
@@ -103,10 +107,13 @@ export function Sidebar({
           <SquarePen className="shrink-0 h-4 w-4" />
           {!isCollapsed && <div className="flex items-center">New chat</div>}
         </Button>
+      </div>
 
-        {!isCollapsed && (
-          <div className="flex flex-col pt-10 gap-2">
-            <p className="pl-4 text-xs text-muted-foreground">Your chats</p>
+      {/* Scrollable chats section */}
+      {!isCollapsed && (
+        <div className="flex flex-col flex-1 min-h-0 pt-4 gap-2">
+          <p className="pl-4 text-xs text-muted-foreground">Your chats</p>
+          <div className="flex-1 overflow-y-auto">
             <Suspense fallback>
               {chats &&
                 Object.entries(chats)
@@ -130,7 +137,7 @@ export function Sidebar({
                     >
                       <div className="flex gap-3 items-center truncate">
                         <div className="flex flex-col">
-                          <span className="text-xs font-normal ">
+                          <span className="text-sm font-normal ">
                             {chat.messages.length > 0
                               ? chat.messages[0].content
                               : ""}
@@ -192,8 +199,8 @@ export function Sidebar({
                   ))}
             </Suspense>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className={cn("mb-4 p-1", isCollapsed ? "flex justify-center" : "")}>
         <ModeToggle
