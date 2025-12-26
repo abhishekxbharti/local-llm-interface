@@ -6,10 +6,15 @@ A clean, minimal chat interface for Ollama.
 
 ## Demo
 
-Hosted preview:  
-https://local-llm-interface-preview.vercel.app/
+![Demo](./public/preview.gif)
 
-> The hosted demo uses OpenRouter-powered models for preview purposes only.  
+|                   Light Theme                    |                Code Preview                |
+| :----------------------------------------------: | :----------------------------------------: |
+| ![Light Theme](./public/light-theme-preview.png) | ![Code Preview](./public/code-preview.png) |
+
+**[Live Demo →](https://local-llm-interface-preview.vercel.app/)**
+
+> The hosted demo uses OpenAI-powered models for preview purposes only.  
 > The project itself is designed for local-first usage with Ollama.
 
 ---
@@ -29,9 +34,18 @@ https://local-llm-interface-preview.vercel.app/
 
 ## Setup
 
+local development:
+
 ```bash
 pnpm install
 pnpm dev
+```
+
+build for production:
+
+```bash
+pnpm build
+pnpm start
 ```
 
 Open: [http://localhost:3000](http://localhost:3000)
@@ -48,3 +62,4 @@ OLLAMA_URL="http://localhost:11434"
 
 Built by **Abhishek Bharti**  
 [abhishekxbharti.com](https://abhishekxbharti.com)
+[abhishekxbharti@gmail.com](mailto:abhishekxbharti@gmail.com)
